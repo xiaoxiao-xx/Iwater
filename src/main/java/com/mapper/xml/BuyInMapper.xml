@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.BuyInMapper">
+  <resultMap id="BaseResultMap" type="com.model.BuyIn">
+    <id column="buy_in_id" jdbcType="VARCHAR" property="buyInId" />
+    <result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="buy_num" jdbcType="INTEGER" property="buyNum" />
+    <result column="buy_money" jdbcType="DOUBLE" property="buyMoney" />
+    <result column="buy_time" jdbcType="TIMESTAMP" property="buyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    buy_in_id, goods_id, goods_name, buy_num, buy_money, buy_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from buy_in
+    where buy_in_id = #{buyInId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from buy_in
+    where buy_in_id = #{buyInId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.BuyIn">
+    insert into buy_in (buy_in_id, goods_id, goods_name, 
+      buy_num, buy_money, buy_time
+      )
+    values (#{buyInId,jdbcType=VARCHAR}, #{goodsId,jdbcType=VARCHAR}, #{goodsName,jdbcType=VARCHAR}, 
+      #{buyNum,jdbcType=INTEGER}, #{buyMoney,jdbcType=DOUBLE}, #{buyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.BuyIn">
+    insert into buy_in
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="buyInId != null">
+        buy_in_id,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="goodsName != null">
+        goods_name,
+      </if>
+      <if test="buyNum != null">
+        buy_num,
+      </if>
+      <if test="buyMoney != null">
+        buy_money,
+      </if>
+      <if test="buyTime != null">
+        buy_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="buyInId != null">
+        #{buyInId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyNum != null">
+        #{buyNum,jdbcType=INTEGER},
+      </if>
+      <if test="buyMoney != null">
+        #{buyMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="buyTime != null">
+        #{buyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.BuyIn">
+    update buy_in
+    <set>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null">
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyNum != null">
+        buy_num = #{buyNum,jdbcType=INTEGER},
+      </if>
+      <if test="buyMoney != null">
+        buy_money = #{buyMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="buyTime != null">
+        buy_time = #{buyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where buy_in_id = #{buyInId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.BuyIn">
+    update buy_in
+    set goods_id = #{goodsId,jdbcType=VARCHAR},
+      goods_name = #{goodsName,jdbcType=VARCHAR},
+      buy_num = #{buyNum,jdbcType=INTEGER},
+      buy_money = #{buyMoney,jdbcType=DOUBLE},
+      buy_time = #{buyTime,jdbcType=TIMESTAMP}
+    where buy_in_id = #{buyInId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectBykeyword" resultType="java.lang.Integer">
+    select count(*) from buy_in where goods_name like #{key,jdbcType=VARCHAR}
+  </select>
+  <select id="selectBykeyLimit" resultMap="BaseResultMap">
+   select * from buy_in where goods_name like #{key,jdbcType=VARCHAR}
+   order by buy_time desc limit
+   #{start,jdbcType=VARCHAR}, #{limit,jdbcType=VARCHAR}
+  </select>
+    <select id="selectStatistics" resultType="com.Pojo.EchartsPojo">
+      SELECT
+      goods_name as name,
+      sum(buy_num) as value
+      FROM
+      buy_in
+      <if test=" _parameter !=null and 'no' != _parameter ">
+        WHERE buy_time between CONCAT(#{time,jdbcType=VARCHAR},'-01') and CONCAT(#{time,jdbcType=VARCHAR},'-31')
+      </if>
+      GROUP BY
+      goods_id
+    </select>
+
+</mapper>

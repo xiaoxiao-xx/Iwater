@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.WaterTicketMapper">
+  <resultMap id="BaseResultMap" type="com.model.WaterTicket">
+    <id column="water_ticket_id" jdbcType="VARCHAR" property="waterTicketId" />
+    <result column="customer_id" jdbcType="VARCHAR" property="customerId" />
+    <result column="customer_num" jdbcType="VARCHAR" property="customerNum" />
+    <result column="water_ticket_count" jdbcType="INTEGER" property="waterTicketCount" />
+  </resultMap>
+  <resultMap id="TicketResultMap" type="com.Pojo.CusTicket">
+    <id column="water_ticket_id" jdbcType="VARCHAR" property="waterTicketId" />
+    <result column="customer_id" jdbcType="VARCHAR" property="customerId" />
+    <result column="customer_num" jdbcType="VARCHAR" property="customerNum" />
+    <result column="water_ticket_count" jdbcType="INTEGER" property="waterTicketCount" />
+    <result column="customer_addr" jdbcType="VARCHAR" property="customerAddr" />
+    <result column="customer_tel" jdbcType="VARCHAR" property="customerTel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    water_ticket_id, customer_id, customer_num, water_ticket_count
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from water_ticket
+    where water_ticket_id = #{waterTicketId,jdbcType=VARCHAR}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from water_ticket
+    where water_ticket_id = #{waterTicketId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.WaterTicket">
+    insert into water_ticket (water_ticket_id, customer_id, customer_num, 
+      water_ticket_count)
+    values (#{waterTicketId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{customerNum,jdbcType=VARCHAR}, 
+      #{waterTicketCount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.WaterTicket">
+    insert into water_ticket
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="waterTicketId != null">
+        water_ticket_id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="customerNum != null">
+        customer_num,
+      </if>
+      <if test="waterTicketCount != null">
+        water_ticket_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="waterTicketId != null">
+        #{waterTicketId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNum != null">
+        #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="waterTicketCount != null">
+        #{waterTicketCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.WaterTicket">
+    update water_ticket
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNum != null">
+        customer_num = #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="waterTicketCount != null">
+        water_ticket_count = #{waterTicketCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where water_ticket_id = #{waterTicketId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.WaterTicket">
+    update water_ticket
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      customer_num = #{customerNum,jdbcType=VARCHAR},
+      water_ticket_count = #{waterTicketCount,jdbcType=INTEGER}
+    where water_ticket_id = #{waterTicketId,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectBykey" resultType="java.lang.Integer">
+    SELECT count(*) from customer_table WHERE customer_num like #{key,jdbcType=VARCHAR}
+  </select>
+    <select id="selectBykeyLimit" resultMap="TicketResultMap">
+      SELECT
+        c.customer_num,
+        c.customer_addr,
+        c.customer_tel,
+        w.water_ticket_id,
+        w.water_ticket_count,
+        c.customer_id
+        from customer_table c LEFT JOIN water_ticket w ON c.customer_id=w.customer_id
+        WHERE c.customer_num like #{key,jdbcType=VARCHAR}
+        ORDER BY CAST(c.customer_num AS UNSIGNED)
+        limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+    </select>
+
+    <update id="rechargeTicket" parameterType="com.model.WaterTicket">
+        UPDATE water_ticket
+        SET water_ticket_count = (
+        CASE
+        WHEN (
+        SELECT
+        a.water_ticket_count +#{waterTicketCount,jdbcType=INTEGER}
+        FROM
+        (
+        SELECT
+        water_ticket_count
+        FROM
+        water_ticket
+        WHERE
+        water_ticket_id = #{waterTicketId,jdbcType=VARCHAR}
+        ) a ) &lt; 0 THEN 0 ELSE (
+        SELECT
+        a.water_ticket_count + #{waterTicketCount,jdbcType=INTEGER}
+        FROM
+        (
+        SELECT
+        water_ticket_count
+        FROM
+        water_ticket
+        WHERE
+        water_ticket_id = #{waterTicketId,jdbcType=VARCHAR}
+        ) a
+        )
+        END
+        )
+        WHERE
+        water_ticket_id = #{waterTicketId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByCustomerId" parameterType="com.model.WaterTicket">
+        UPDATE water_ticket
+        SET water_ticket_count = (
+        CASE
+        WHEN (
+        SELECT
+        a.water_ticket_count - #{waterTicketCount,jdbcType=INTEGER}
+        FROM
+        (
+        SELECT
+        water_ticket_count
+        FROM
+        water_ticket
+        WHERE
+        customer_id = #{customerId,jdbcType=VARCHAR}
+        ) a ) &lt; 0 THEN 0 ELSE (
+        SELECT
+        a.water_ticket_count - #{waterTicketCount,jdbcType=INTEGER}
+        FROM
+        (
+        SELECT
+        water_ticket_count
+        FROM
+        water_ticket
+        WHERE
+        customer_id = #{customerId,jdbcType=VARCHAR}
+        ) a
+        )
+        END
+        )
+        WHERE
+        customer_id = #{customerId,jdbcType=VARCHAR}
+    </update>
+</mapper>

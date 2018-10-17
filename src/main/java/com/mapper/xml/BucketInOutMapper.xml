@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.BucketInOutMapper">
+  <resultMap id="BaseResultMap" type="com.model.BucketInOut">
+    <id column="bucket_in_out_id" jdbcType="VARCHAR" property="bucketInOutId" />
+    <result column="customer_id" jdbcType="VARCHAR" property="customerId" />
+    <result column="customer_num" jdbcType="VARCHAR" property="customerNum" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="account_money" jdbcType="DOUBLE" property="accountMoney" />
+    <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    bucket_in_out_id, customer_id, customer_num, remarks, account_money, change_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bucket_in_out
+    where bucket_in_out_id = #{bucketInOutId,jdbcType=VARCHAR}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bucket_in_out
+    where bucket_in_out_id = #{bucketInOutId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.BucketInOut">
+    insert into bucket_in_out (bucket_in_out_id, customer_id, customer_num, 
+      remarks, account_money, change_time
+      )
+    values (#{bucketInOutId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{customerNum,jdbcType=VARCHAR}, 
+      #{remarks,jdbcType=VARCHAR}, #{accountMoney,jdbcType=DOUBLE}, #{changeTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.BucketInOut">
+    insert into bucket_in_out
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bucketInOutId != null">
+        bucket_in_out_id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="customerNum != null">
+        customer_num,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="accountMoney != null">
+        account_money,
+      </if>
+      <if test="changeTime != null">
+        change_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bucketInOutId != null">
+        #{bucketInOutId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNum != null">
+        #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="accountMoney != null">
+        #{accountMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="changeTime != null">
+        #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.BucketInOut">
+    update bucket_in_out
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNum != null">
+        customer_num = #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="accountMoney != null">
+        account_money = #{accountMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="changeTime != null">
+        change_time = #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where bucket_in_out_id = #{bucketInOutId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.BucketInOut">
+    update bucket_in_out
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      customer_num = #{customerNum,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      account_money = #{accountMoney,jdbcType=DOUBLE},
+      change_time = #{changeTime,jdbcType=TIMESTAMP}
+    where bucket_in_out_id = #{bucketInOutId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectBykey" resultType="java.lang.Integer">
+    select count(*) from customer_table where customer_num like #{key,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectBykeyLimit" resultMap="BaseResultMap">
+  SELECT
+  c.customer_id,
+  c.customer_num,
+  b.change_time,
+  b.remarks,
+  b.account_money,
+  b.bucket_in_out_id
+  from customer_table c LEFT JOIN bucket_in_out b on c.customer_id=b.customer_id
+  where c.customer_num like #{key,jdbcType=VARCHAR}
+  ORDER BY CAST(c.customer_num AS UNSIGNED) limit
+  #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByCusId" resultMap="BaseResultMap">
+    select * from bucket_in_out where customer_id=#{customerId,jdbcType=VARCHAR};
+  </select>
+
+</mapper>

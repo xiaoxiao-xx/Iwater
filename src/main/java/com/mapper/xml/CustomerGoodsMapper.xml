@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.CustomerGoodsMapper">
+  <resultMap id="BaseResultMap" type="com.model.CustomerGoods">
+    <id column="customer_goods_id" jdbcType="VARCHAR" property="customerGoodsId" />
+    <result column="customer_id" jdbcType="VARCHAR" property="customerId" />
+    <result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    customer_goods_id, customer_id, goods_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer_goods
+    where customer_goods_id = #{customerGoodsId,jdbcType=VARCHAR}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from customer_goods
+    where customer_goods_id = #{customerGoodsId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.CustomerGoods">
+    insert into customer_goods (customer_goods_id, customer_id, goods_id
+      )
+    values (#{customerGoodsId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{goodsId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.CustomerGoods">
+    insert into customer_goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="customerGoodsId != null">
+        customer_goods_id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="customerGoodsId != null">
+        #{customerGoodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.CustomerGoods">
+    update customer_goods
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where customer_goods_id = #{customerGoodsId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.CustomerGoods">
+    update customer_goods
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=VARCHAR}
+    where customer_goods_id = #{customerGoodsId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByCustomerId" parameterType="com.model.CustomerGoods">
+    update customer_goods set goods_id = #{goodsId,jdbcType=VARCHAR}
+    where
+    customer_id = #{customerId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByCustomerId" resultMap="BaseResultMap">
+    select * from customer_goods where customer_id = #{id,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

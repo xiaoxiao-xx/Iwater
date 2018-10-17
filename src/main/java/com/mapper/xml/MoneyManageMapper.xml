@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.MoneyManageMapper">
+  <resultMap id="BaseResultMap" type="com.model.MoneyManage">
+    <id column="manage_id" jdbcType="VARCHAR" property="manageId" />
+    <result column="income" jdbcType="DOUBLE" property="income" />
+    <result column="outcome" jdbcType="DOUBLE" property="outcome" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="manage_time" jdbcType="TIMESTAMP" property="manageTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    manage_id, income, outcome, remarks, manage_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from money_manage
+    where manage_id = #{manageId,jdbcType=VARCHAR}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from money_manage
+    where manage_id = #{manageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.MoneyManage">
+    insert into money_manage (manage_id, income, outcome, 
+      remarks, manage_time)
+    values (#{manageId,jdbcType=VARCHAR}, #{income,jdbcType=DOUBLE}, #{outcome,jdbcType=DOUBLE}, 
+      #{remarks,jdbcType=VARCHAR}, #{manageTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.MoneyManage">
+    insert into money_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="manageId != null">
+        manage_id,
+      </if>
+      <if test="income != null">
+        income,
+      </if>
+      <if test="outcome != null">
+        outcome,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="manageTime != null">
+        manage_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="manageId != null">
+        #{manageId,jdbcType=VARCHAR},
+      </if>
+      <if test="income != null">
+        #{income,jdbcType=DOUBLE},
+      </if>
+      <if test="outcome != null">
+        #{outcome,jdbcType=DOUBLE},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="manageTime != null">
+        #{manageTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.MoneyManage">
+    update money_manage
+    <set>
+      <if test="income != null">
+        income = #{income,jdbcType=DOUBLE},
+      </if>
+      <if test="outcome != null">
+        outcome = #{outcome,jdbcType=DOUBLE},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="manageTime != null">
+        manage_time = #{manageTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where manage_id = #{manageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.MoneyManage">
+    update money_manage
+    set income = #{income,jdbcType=DOUBLE},
+      outcome = #{outcome,jdbcType=DOUBLE},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      manage_time = #{manageTime,jdbcType=TIMESTAMP}
+    where manage_id = #{manageId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectStatistics" resultType="com.Pojo.MoneyPojo">
+    SELECT
+	IFNULL(SUM(income),0) AS income,
+	IFNULL(sum(outcome),0) AS outcome,
+	(IFNULL(SUM(income),0)- IFNULL(sum(outcome),0)) as profit,
+	YEAR (manage_time) AS YEAR,
+	MONTH (manage_time) AS MONTH
+    FROM
+	money_manage
+    WHERE YEAR(manage_time)= #{year,jdbcType=VARCHAR}
+    GROUP BY
+	MONTH (manage_time)
+  </select>
+
+</mapper>

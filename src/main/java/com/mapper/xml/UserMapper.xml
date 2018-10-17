@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.model.User">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, username, password, createtime
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.model.User">
+    insert into user (id, username, password, 
+      createtime)
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.model.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.model.User">
+        update user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.model.User">
+    update user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <select id="login" parameterType="java.lang.String" resultType="com.model.User">
+    select
+    *
+    from user
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+
+    <select id="selectBykey" resultType="java.util.HashMap" parameterType="java.lang.String" >
+    SELECT
+    customer_table.customer_id as customerId,
+    customer_table.customer_num as customerNum,
+    customer_table.customer_addr as customerAddr,
+    customer_table.customer_tel as customerTel,
+    customer_table.customer_otherinfo as customerOtherinfo,
+    goods_table.goods_name as goods_name,
+    water_ticket.water_ticket_count as waterTicketCount
+    FROM
+    customer_table
+    inner JOIN customer_goods ON customer_table.customer_id = customer_goods.customer_id
+    INNER JOIN water_ticket ON customer_goods.customer_id = water_ticket.customer_id
+    INNER JOIN goods_table ON customer_goods.goods_id = goods_table.goods_id
+    where customer_table.customer_num like #{key,jdbcType=VARCHAR}
+    or customer_table.customer_addr like #{key,jdbcType=VARCHAR}
+    or customer_table.customer_tel like #{key,jdbcType=VARCHAR}
+  </select>
+</mapper>

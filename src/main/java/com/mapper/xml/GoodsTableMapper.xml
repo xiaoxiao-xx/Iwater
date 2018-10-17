@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.GoodsTableMapper">
+  <resultMap id="BaseResultMap" type="com.model.GoodsTable">
+    <id column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_out" jdbcType="DOUBLE" property="goodsOut" />
+    <result column="goods_in" jdbcType="DOUBLE" property="goodsIn" />
+    <result column="goods_specs" jdbcType="VARCHAR" property="goodsSpecs" />
+    <result column="customer_time" jdbcType="TIMESTAMP" property="customerTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    goods_id, goods_name, goods_out, goods_in, goods_specs, customer_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from goods_table
+    where goods_id = #{goodsId,jdbcType=VARCHAR}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from goods_table
+    where goods_id = #{goodsId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.GoodsTable">
+    insert into goods_table (goods_id, goods_name, goods_out, 
+      goods_in, goods_specs, customer_time
+      )
+    values (#{goodsId,jdbcType=VARCHAR}, #{goodsName,jdbcType=VARCHAR}, #{goodsOut,jdbcType=DOUBLE}, 
+      #{goodsIn,jdbcType=DOUBLE}, #{goodsSpecs,jdbcType=VARCHAR}, #{customerTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.GoodsTable">
+    insert into goods_table
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="goodsName != null">
+        goods_name,
+      </if>
+      <if test="goodsOut != null">
+        goods_out,
+      </if>
+      <if test="goodsIn != null">
+        goods_in,
+      </if>
+      <if test="goodsSpecs != null">
+        goods_specs,
+      </if>
+      <if test="customerTime != null">
+        customer_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsOut != null">
+        #{goodsOut,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsIn != null">
+        #{goodsIn,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsSpecs != null">
+        #{goodsSpecs,jdbcType=VARCHAR},
+      </if>
+      <if test="customerTime != null">
+        #{customerTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.GoodsTable">
+    update goods_table
+    <set>
+      <if test="goodsName != null">
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsOut != null">
+        goods_out = #{goodsOut,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsIn != null">
+        goods_in = #{goodsIn,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsSpecs != null">
+        goods_specs = #{goodsSpecs,jdbcType=VARCHAR},
+      </if>
+      <if test="customerTime != null">
+        customer_time = #{customerTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where goods_id = #{goodsId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.GoodsTable">
+    update goods_table
+    set goods_name = #{goodsName,jdbcType=VARCHAR},
+      goods_out = #{goodsOut,jdbcType=DOUBLE},
+      goods_in = #{goodsIn,jdbcType=DOUBLE},
+      goods_specs = #{goodsSpecs,jdbcType=VARCHAR},
+      customer_time = #{customerTime,jdbcType=TIMESTAMP}
+    where goods_id = #{goodsId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectBykey" resultType="java.lang.Integer">
+    select count(*) from goods_table where goods_name like #{key,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectBykeyLimit" resultMap="BaseResultMap">
+    select * from goods_table where goods_name like #{key,jdbcType=VARCHAR}
+    limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllGoods" resultMap="BaseResultMap">
+    SELECT goods_id,goods_name,goods_specs from goods_table
+  </select>
+</mapper>

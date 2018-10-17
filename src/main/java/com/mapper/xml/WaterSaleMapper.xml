@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.WaterSaleMapper">
+  <resultMap id="BaseResultMap" type="com.model.WaterSale">
+    <id column="water_sale_id" jdbcType="VARCHAR" property="waterSaleId" />
+    <result column="customer_id" jdbcType="VARCHAR" property="customerId" />
+    <result column="customer_num" jdbcType="VARCHAR" property="customerNum" />
+    <result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="sale_num" jdbcType="INTEGER" property="saleNum" />
+    <result column="sale_money" jdbcType="DOUBLE" property="saleMoney" />
+    <result column="ticket_count" jdbcType="INTEGER" property="ticketCount" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="sale_statu" jdbcType="VARCHAR" property="saleStatu" />
+    <result column="sale_time" jdbcType="TIMESTAMP" property="saleTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    water_sale_id, customer_id, customer_num, goods_id, goods_name, sale_num, sale_money, 
+    ticket_count, remarks, sale_statu, sale_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from water_sale
+    where water_sale_id = #{waterSaleId,jdbcType=VARCHAR}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from water_sale
+    where water_sale_id = #{waterSaleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.WaterSale">
+    insert into water_sale (water_sale_id, customer_id, customer_num, 
+      goods_id, goods_name, sale_num, 
+      sale_money, ticket_count, remarks, 
+      sale_statu, sale_time)
+    values (#{waterSaleId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{customerNum,jdbcType=VARCHAR}, 
+      #{goodsId,jdbcType=VARCHAR}, #{goodsName,jdbcType=VARCHAR}, #{saleNum,jdbcType=INTEGER}, 
+      #{saleMoney,jdbcType=DOUBLE}, #{ticketCount,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, 
+      #{saleStatu,jdbcType=VARCHAR}, #{saleTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.WaterSale">
+    insert into water_sale
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="waterSaleId != null">
+        water_sale_id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="customerNum != null">
+        customer_num,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="goodsName != null">
+        goods_name,
+      </if>
+      <if test="saleNum != null">
+        sale_num,
+      </if>
+      <if test="saleMoney != null">
+        sale_money,
+      </if>
+      <if test="ticketCount != null">
+        ticket_count,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="saleStatu != null">
+        sale_statu,
+      </if>
+      <if test="saleTime != null">
+        sale_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="waterSaleId != null">
+        #{waterSaleId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNum != null">
+        #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleNum != null">
+        #{saleNum,jdbcType=INTEGER},
+      </if>
+      <if test="saleMoney != null">
+        #{saleMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="ticketCount != null">
+        #{ticketCount,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="saleStatu != null">
+        #{saleStatu,jdbcType=VARCHAR},
+      </if>
+      <if test="saleTime != null">
+        #{saleTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.WaterSale">
+    update water_sale
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNum != null">
+        customer_num = #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null">
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleNum != null">
+        sale_num = #{saleNum,jdbcType=INTEGER},
+      </if>
+      <if test="saleMoney != null">
+        sale_money = #{saleMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="ticketCount != null">
+        ticket_count = #{ticketCount,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="saleStatu != null">
+        sale_statu = #{saleStatu,jdbcType=VARCHAR},
+      </if>
+      <if test="saleTime != null">
+        sale_time = #{saleTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where water_sale_id = #{waterSaleId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.WaterSale">
+    update water_sale
+    set customer_id = #{customerId,jdbcType=VARCHAR},
+      customer_num = #{customerNum,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=VARCHAR},
+      goods_name = #{goodsName,jdbcType=VARCHAR},
+      sale_num = #{saleNum,jdbcType=INTEGER},
+      sale_money = #{saleMoney,jdbcType=DOUBLE},
+      ticket_count = #{ticketCount,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      sale_statu = #{saleStatu,jdbcType=VARCHAR},
+      sale_time = #{saleTime,jdbcType=TIMESTAMP}
+    where water_sale_id = #{waterSaleId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectBykeyword" resultType="java.lang.Integer">
+    select count(*) from water_sale where customer_num like #{key,jdbcType=VARCHAR}
+  </select>
+  <select id="selectBykeyLimit" resultMap="BaseResultMap">
+  select * from water_sale where customer_num like #{key,jdbcType=VARCHAR}
+  order by sale_time desc
+  limit #{start,jdbcType=TIMESTAMP},#{limit,jdbcType=TIMESTAMP}
+  </select>
+    <select id="selectStatistics" resultType="com.Pojo.EchartsPojo" parameterType="java.lang.String">
+    SELECT
+	goods_name as name,
+    sum(sale_num) as value
+    FROM
+	water_sale
+	<if test=" _parameter !=null and 'no' != _parameter ">
+	WHERE sale_time between CONCAT(#{time,jdbcType=VARCHAR},'-01') and CONCAT(#{time,jdbcType=VARCHAR},'-31')
+    </if>
+    GROUP BY
+	goods_id
+    </select>
+
+</mapper>

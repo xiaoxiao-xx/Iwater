@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.CustomerTableMapper">
+  <resultMap id="BaseResultMap" type="com.model.CustomerTable">
+    <id column="customer_id" jdbcType="VARCHAR" property="customerId" />
+    <result column="customer_num" jdbcType="VARCHAR" property="customerNum" />
+    <result column="customer_addr" jdbcType="VARCHAR" property="customerAddr" />
+    <result column="customer_tel" jdbcType="VARCHAR" property="customerTel" />
+    <result column="customer_statu" jdbcType="VARCHAR" property="customerStatu" />
+    <result column="customer_otherinfo" jdbcType="VARCHAR" property="customerOtherinfo" />
+    <result column="customer_time" jdbcType="TIMESTAMP" property="customerTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    customer_id, customer_num, customer_addr, customer_tel, customer_statu, customer_otherinfo, 
+    customer_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer_table
+    where customer_id = #{customerId,jdbcType=VARCHAR}
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from customer_table
+    where customer_id = #{customerId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.CustomerTable">
+    insert into customer_table (customer_id, customer_num, customer_addr,
+      customer_tel, customer_statu, customer_otherinfo,
+      customer_time)
+    values (#{customerId,jdbcType=VARCHAR}, #{customerNum,jdbcType=VARCHAR}, #{customerAddr,jdbcType=VARCHAR},
+      #{customerTel,jdbcType=VARCHAR}, #{customerStatu,jdbcType=VARCHAR}, #{customerOtherinfo,jdbcType=VARCHAR},
+      #{customerTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.CustomerTable">
+    insert into customer_table
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="customerNum != null">
+        customer_num,
+      </if>
+      <if test="customerAddr != null">
+        customer_addr,
+      </if>
+      <if test="customerTel != null">
+        customer_tel,
+      </if>
+      <if test="customerStatu != null">
+        customer_statu,
+      </if>
+      <if test="customerOtherinfo != null">
+        customer_otherinfo,
+      </if>
+      <if test="customerTime != null">
+        customer_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNum != null">
+        #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="customerAddr != null">
+        #{customerAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="customerTel != null">
+        #{customerTel,jdbcType=VARCHAR},
+      </if>
+      <if test="customerStatu != null">
+        #{customerStatu,jdbcType=VARCHAR},
+      </if>
+      <if test="customerOtherinfo != null">
+        #{customerOtherinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerTime != null">
+        #{customerTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.CustomerTable">
+    update customer_table
+    <set>
+      <if test="customerNum != null">
+        customer_num = #{customerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="customerAddr != null">
+        customer_addr = #{customerAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="customerTel != null">
+        customer_tel = #{customerTel,jdbcType=VARCHAR},
+      </if>
+      <if test="customerStatu != null">
+        customer_statu = #{customerStatu,jdbcType=VARCHAR},
+      </if>
+      <if test="customerOtherinfo != null">
+        customer_otherinfo = #{customerOtherinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerTime != null">
+        customer_time = #{customerTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where customer_id = #{customerId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.CustomerTable">
+    update customer_table
+    set customer_num = #{customerNum,jdbcType=VARCHAR},
+      customer_addr = #{customerAddr,jdbcType=VARCHAR},
+      customer_tel = #{customerTel,jdbcType=VARCHAR},
+      customer_statu = #{customerStatu,jdbcType=VARCHAR},
+      customer_otherinfo = #{customerOtherinfo,jdbcType=VARCHAR},
+      customer_time = #{customerTime,jdbcType=TIMESTAMP}
+    where customer_id = #{customerId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectBykey" resultType="java.lang.Integer">
+    select count(*) from customer_table where
+    customer_num like #{key,jdbcType=VARCHAR} or
+    customer_addr like #{key,jdbcType=VARCHAR} or
+    customer_tel like #{key,jdbcType=VARCHAR}
+  </select>
+    <select id="selectBykeyLimit" resultMap="BaseResultMap">
+    select * from customer_table where
+    customer_num like #{key,jdbcType=VARCHAR} or
+    customer_addr like #{key,jdbcType=VARCHAR} or
+    customer_tel like #{key,jdbcType=VARCHAR}
+    ORDER BY CAST(customer_num AS UNSIGNED) limit
+    #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+    </select>
+    <select id="getLastNum" resultType="java.lang.String">
+        SELECT (customer_num+1) as customer_num from customer_table ORDER BY CAST(customer_num AS UNSIGNED) desc LIMIT 1
+    </select>
+  <select id="selectByNum" resultMap="BaseResultMap">
+    select customer_id  from customer_table where customer_num = #{num,jdbcType=VARCHAR};
+  </select>
+</mapper>
